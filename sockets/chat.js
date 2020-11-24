@@ -10,9 +10,11 @@ module.exports = (io, socket, onlineUsers, channels) => {
     })
   
     socket.on('new message', (data) => {
-      console.log(`🎤 ${data.sender}: ${data.message} 🎤`)
-      io.emit('new message', data);
-    })
+        //Save the new message to the channel.
+        channels[data.channel].push({sender : data.sender, message : data.message});
+        //Emit only to sockets that are in that channel room.
+        io.to(data.channel).emit('new message', data);
+      });
 
     socket.on('get online users', () => {
         //Send over the onlineUsers
@@ -30,7 +32,7 @@ module.exports = (io, socket, onlineUsers, channels) => {
     socket.on('new channel', (newChannel) => {
         console.log(newChannel);
     })
-    
+
     socket.on('new channel', (newChannel) => {
         //Save the new channel to our channels object. The array will hold the messages.
         channels[newChannel] = [];

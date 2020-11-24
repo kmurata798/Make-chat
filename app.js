@@ -13,6 +13,7 @@ app.use('/public', express.static('public'))
 const io = require('socket.io')(server);
 //We'll store our online users here
 let onlineUsers = {};
+//Save the channels in this object.
 let channels = {"General" : []}
 
 io.on("connection", (socket) => {
